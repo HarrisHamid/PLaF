@@ -55,13 +55,19 @@ let rec eval_expr : expr -> exp_val ea_result =
     eval_expr e2 >>= fun ev2 ->
     return (PairVal(ev1,ev2))
   | Fst(e) ->
-    eval_expr e >>=
-    pair_of_pairVal >>= fun (l,_) ->
+    eval_expr e >>=                        (* first evaluate e*)
+    pair_of_pairVal >>= fun (l,_r) ->
     return l
   | Snd(e) ->
     eval_expr e >>=
-    pair_of_pairVal >>= fun (_,r) ->
+    pair_of_pairVal >>= fun (_l,r) ->
     return r
+  | Unpair(id1,id2,e1,e2) ->
+    eval_expr e1 >>=
+    pair_of_pairVal >>= fun(ev1,ev2) ->
+    extend_env id1 ev1 >>+                 (*+ says it will produce env, and pass on to whatever infront of plus. Will update env*)
+    extend_env id2 ev2 >>+
+    eval_expr e2
   | Debug(_e) ->
     string_of_env >>= fun str ->
     print_endline str; 
