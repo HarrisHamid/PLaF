@@ -70,7 +70,7 @@ let rec eval_expr : expr -> exp_val ea_result =
 
 (** [eval_prog e] evaluates program [e] *)
 let eval_prog (AProg(_,e)) =
-  eval_expr e
+  eval_expr e 
 
 
 (** [interp s] parses [s] and then evaluates it *)
